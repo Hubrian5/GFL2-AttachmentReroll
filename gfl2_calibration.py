@@ -103,7 +103,6 @@ STAT_NAME_MAP = {
 }
 
 # Does this attachment have 4 stats (including Crit Damage)?
-# This is now used only as a fallback when stat-name OCR is unavailable.
 HAS_CRIT_DAMAGE = True
 
 # ── Average Threshold ─────────────────────────────────────────────────────────
@@ -435,10 +434,7 @@ def notify_success(percentages, average):
 
 def wait_for_enter(prompt):
     """
-    Print a prompt, then block until Enter is pressed globally (terminal does
-    not need focus). The keyboard library hooks at the OS level so this works
-    while the game window is in the foreground.
-
+    Print a prompt, then block until Enter is pressed globally.
     Returns the mouse position at the moment Enter was pressed, or None if
     Escape was pressed to cancel.
     """
@@ -500,9 +496,7 @@ def capture_two_corners(label):
 def interactive_calibrate():
     """
     Walk the user through defining every button position and stat region by
-    hovering the mouse and pressing Enter. Everything works with the terminal
-    out of focus because the keyboard library hooks at the OS level.
-
+    hovering the mouse and pressing Enter.
     Saves results to gfl2_config.json for automatic loading on future runs.
     """
     print("\n" + "═" * 60)
