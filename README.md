@@ -7,6 +7,6 @@ Steps to make it work:
    
 python gfl2_calibration.py --calibrate
 
-4. Run
+3. Run
    
 python gfl2_calibration.py
