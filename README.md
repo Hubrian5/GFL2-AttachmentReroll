@@ -1,5 +1,7 @@
 OCR may misread below 100% but doesn't matter.
 
+Change avg threshold inside script.
+
 Steps to make it work:
 1. Install dependencies and tesseract
 
