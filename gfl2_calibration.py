@@ -39,8 +39,6 @@ import os
 import keyboard
 from PIL import Image
 
-# pydirectinput sends inputs at the DirectInput level which games recognize.
-# pyautogui is kept only for reading mouse position during calibration.
 pyautogui.PAUSE = 0
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -95,14 +93,13 @@ STAT_NAME_MAP = {
     "critical rate":   "crit_rate",
     "crit damage":     "crit_damage",
     "critical damage": "crit_damage",
+    "defense boost":   "defense_boost",
     "defense":         "defense",
-    "hp":              "hp",
-    "hit":             "hit",
-    "evasion":         "evasion",
-    "reload":          "reload",
+    "health boost":    "health_boost",
+    "health":          "health"
 }
 
-# Does this attachment have 4 stats (including Crit Damage)?
+# This is now used only as a fallback when stat-name OCR is unavailable.
 HAS_CRIT_DAMAGE = True
 
 # ── Average Threshold ─────────────────────────────────────────────────────────
@@ -120,6 +117,10 @@ PER_STAT_MINIMUMS = {
     "attack_boost": 100,
     "crit_rate":    100,
     "crit_damage":  100,
+    "health":       100,
+    "health_boost": 100,
+    "defense":      100,
+    "defense_boost":100
 }
 
 # ── Timing (seconds) ──────────────────────────────────────────────────────────
@@ -336,8 +337,6 @@ def reset_stat_detection():
     _detected_stats = None
 
 
-
-
 def read_percentage_with_retry(slot_key, stat_name, attempts=3, debug=False):
     """
     Try to read a percentage up to `attempts` times.
@@ -434,7 +433,10 @@ def notify_success(percentages, average):
 
 def wait_for_enter(prompt):
     """
-    Print a prompt, then block until Enter is pressed globally.
+    Print a prompt, then block until Enter is pressed globally (terminal does
+    not need focus). The keyboard library hooks at the OS level so this works
+    while the game window is in the foreground.
+
     Returns the mouse position at the moment Enter was pressed, or None if
     Escape was pressed to cancel.
     """
@@ -497,6 +499,7 @@ def interactive_calibrate():
     """
     Walk the user through defining every button position and stat region by
     hovering the mouse and pressing Enter.
+
     Saves results to gfl2_config.json for automatic loading on future runs.
     """
     print("\n" + "═" * 60)
@@ -505,7 +508,7 @@ def interactive_calibrate():
     print("""
   HOW IT WORKS:
     - Hover your mouse over the target element in-game.
-    - Press  Enter  (anywhere — terminal does not need focus).
+    - Press  Enter.
     - The script records your mouse position at that moment.
     - Press  Escape  at any prompt to abort.
 
@@ -681,7 +684,7 @@ def run():
     print("  GFL2 Calibration Auto-Reroller")
     print("═" * 60)
     print(f"  Average threshold : {AVERAGE_THRESHOLD}%")
-    print(f"  Stats tracked     : {', '.join(get_active_stats())}")
+    #print(f"  Stats tracked     : {', '.join(get_active_stats())}")
     print(f"  Per-stat minimums : {PER_STAT_MINIMUMS}")
     print(f"  Max attempts      : {MAX_ATTEMPTS if MAX_ATTEMPTS else 'unlimited'}")
     print("\n  Failsafes:")
